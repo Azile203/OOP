@@ -10,7 +10,7 @@ public:
     Int(int initial) : value(initial) {}
 
     // Перегрузка оператора +
-    Int operator+(const Int& other) const {
+    Int operator++(const Int& other) const {
         return checkOverflow(value + other.value, "Addition");
     }
 
@@ -27,7 +27,7 @@ public:
     // Перегрузка оператора /
     Int operator/(const Int& other) const {
         if (other.value == 0) {
-            throw std::runtime_error("Division by zero");
+            throw runtime_error("Division by zero");
         }
         return checkOverflow(value / other.value, "Division");
     }
@@ -45,16 +45,16 @@ public:
         return temp;
     }
 
-    // Метод для вывода значения
+    
     void display() const {
-        std::cout << value << endl;
+        cout << value << endl;
     }
 
 private:
     // Метод для проверки переполнения и выброса исключения при необходимости
-    Int checkOverflow(long double result, const std::string& operation) const {
-        if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
-            throw std::overflow_error("Arithmetic overflow in " + operation + " operation");
+    Int checkOverflow(long double result, const string& operation) const {
+        if (result > numeric_limits<int>::max() || result < numeric_limits<int>::min()) {
+            throw overflow_error("Arithmetic overflow in " + operation + " operation");
         }
         return Int(static_cast<int>(result));
     }
@@ -95,7 +95,7 @@ int main() {
         cout << "Префиксный инкремент: ";
         (++myInt).display();
     }
-    catch (const std::exception& e) {
+    catch (const exception& e) {
         cerr << "Ошибка: " << e.what() << endl;
     }
 
@@ -150,7 +150,7 @@ public:
             return Fraction(chislo / other.chislo);
         }
         else {
-            std::cerr << "Error: Division by zero\n";
+            cerr << "Error: Division by zero\n";
             return Fraction();
         }
     }
@@ -178,20 +178,19 @@ public:
         }
     }
 
-    // Перегрузка унарной операции инкремента (префиксная форма)
+    
     Fraction operator++() {
         chislo += 1.0;
         return *this;
     }
 
-    // Перегрузка унарной операции инкремента (постфиксная форма)
     Fraction operator++(int) {
         Fraction temp = *this;
         chislo += 1.0;
         return temp;
     }
 
-    // Метод для вывода значения дроби
+ 
     void display() const {
         cout << chislo << endl;
     }
@@ -201,9 +200,10 @@ public:
         cout << "Enter a fraction: ";
         cin >> chislo;
     }
+
+    friend ostream& operator<<(ostream& os, const Fraction& f);
 };
 
-// Перегрузка операторов сложения, вычитания, умножения и деления для работы с числами (внешние функции)
 Fraction operator+(double number, const Fraction& fraction) {
     return Fraction(number + fraction.getChislo());
 }
@@ -221,34 +221,20 @@ Fraction operator/(double number, const Fraction& fraction) {
         return Fraction(number / fraction.getChislo());
     }
     else {
-        std::cerr << "Error: Division by zero\n";
+        cerr << "Error: Division by zero\n";
         return Fraction();
     }
 }
 
+ostream& operator<<(ostream& os, const Fraction& f) {
+    os << f.chislo;
+    return os;
+}
+
 int main() {
-    // Пример использования класса
-    Fraction a;
-    Fraction b;
-
-    a.input();
-    b.input();
-
-    Fraction result1 = a + b;
-    std::cout << "Sum: ";
-    result1.display();
-
-    Fraction result2 = a - b;
-    std::cout << "Difference: ";
-    result2.display();
-
-    Fraction result3 = a * b;
-    std::cout << "Product: ";
-    result3.display();
-
-    Fraction result4 = a / b;
-    std::cout << "Quotient: ";
-    result4.display();
+    
+    Fraction n(5);
+    cout << 5.0 / 2 + n + n - 1 * 2 / n + n++ - ++n / n / 2;
 
     return 0;
 }*/
@@ -259,7 +245,7 @@ int main() {
 
 
 
-#include <iostream>
+/*#include <iostream>
 using namespace std;
 class Rectangle {
 public:
@@ -306,6 +292,60 @@ int main() {
     }
     else {
         cout << "Invalid choice. Please choose 1 or 2.\n";
+    }
+
+    return 0;
+}*/
+
+
+
+
+
+
+#include <iostream>
+#include <sstream>
+using namespace std;
+
+class Rectangle {
+public:
+    double rect_area(double length, double width) {
+        return length * width;
+    }
+
+    double rect_area(double side) {
+        return side * side;
+    }
+};
+
+int main() {
+    Rectangle figure;
+
+    double result;
+    string input;
+
+    cout << "Enter dimensions: ";
+    getline(cin, input);
+
+    istringstream iss(input);
+    string token;
+
+    if (iss >> token) {
+        // Введено хотя бы одно значение
+        double num1 = stod(token);  // Преобразование строки в число
+        if (iss >> token) {
+            // Введены два значения, прямоугольник
+            double num2 = stod(token);  // Преобразование строки в число
+            result = figure.rect_area(num1, num2);
+            cout << "Area of the rectangle: " << result << endl;
+        }
+        else {
+            // Введено одно значение, квадрат
+            result = figure.rect_area(num1);
+            cout << "Area of the square: " << result << endl;
+        }
+    }
+    else {
+        cout << "Invalid input format." << endl;
     }
 
     return 0;
